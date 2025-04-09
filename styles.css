@@ -5,6 +5,23 @@ body {
     color: #333;
 }
 
+/* Logo Styling */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.logo-img {
+    max-width: 150px;
+    height: auto;
+    border-radius: 10px;
+    object-fit: contain;
+    background-color: transparent;
+    display: block;
+    margin: 0 auto;
+}
+
 .container {
     max-width: 1000px;
 }
@@ -121,5 +138,16 @@ body {
     
     #score-message {
         font-size: 16px;
+    }
+    
+    /* Footer styling */
+    footer p {
+        line-height: 1.6;
+    }
+    
+    .footer-icon {
+        font-size: 1.5rem;
+        display: inline-block;
+        margin-bottom: 0.5rem;
     }
 }
