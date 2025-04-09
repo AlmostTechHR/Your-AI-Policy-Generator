@@ -381,7 +381,7 @@ switch (hrAI) {
         return score;
     }
 
-    // Replace your existing generateResults() function with this enhanced version
+    // generateResults() function 
 function generateResults() {
   // Get base score from form inputs
   let score = calculateReadinessScore();
