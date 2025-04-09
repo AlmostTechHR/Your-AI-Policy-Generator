@@ -171,8 +171,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Policy Generation Functions
 
+    // Calculate readiness score out of 100, with defaults to handle any unexpected values.
     function calculateReadinessScore() {
         let score = 0;
+        
         // AI Stance (0-15 points)
         const aiStance = document.getElementById('ai-stance').value;
         switch (aiStance) {
@@ -188,6 +190,9 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'restrictive':
                 score += 5;
                 break;
+            default:
+                score += 0;
+                break;
         }
         
         // Knowledge Management (0-15 points)
@@ -200,6 +205,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 score += 10;
                 break;
             case 'no':
+                score += 0;
+                break;
+            default:
                 score += 0;
                 break;
         }
@@ -219,6 +227,9 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'no-policy':
                 score += 0;
                 break;
+            default:
+                score += 0;
+                break;
         }
         
         // Training (0-15 points)
@@ -231,6 +242,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 score += 10;
                 break;
             case 'none':
+                score += 0;
+                break;
+            default:
                 score += 0;
                 break;
         }
@@ -264,18 +278,19 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'none':
                 score += 0;
                 break;
+            default:
+                score += 0;
+                break;
         }
         
         return score;
     }
 
-    // This function generates the policy output text based on user inputs and calculated readiness score.
+    // Generate the policy output text and update results section
     function generateResults() {
-        // Retrieve the organization name
+        // Retrieve user inputs
         const orgName = document.getElementById('org-name').value;
-        // Calculate the readiness score
         let score = calculateReadinessScore();
-        // Construct the policy text based on score and input data
         let policyText = "Responsible AI Policy for " + orgName + "\n\n";
         policyText += "Your Ethical AI Readiness Score: " + score + " out of 100\n\n";
         
@@ -290,37 +305,35 @@ document.addEventListener('DOMContentLoaded', function() {
                         + "We recommend a thorough review of your current practices and the implementation of robust governance measures.";
         }
         
-        // Optionally include further personalized recommendations based on other form data
-        
-        // Place the generated policy text in the results container
-        document.getElementById('policy-results').textContent = policyText;
+        // Update the results section using the "policy-content" element
+        document.getElementById('policy-content').textContent = policyText;
     }
 
-    // This function uses jsPDF to allow users to download the generated policy as a PDF.
+    // Use jsPDF to generate and download the policy as a PDF file.
     function downloadPolicy() {
-        // Check that jsPDF is available
         const { jsPDF } = window.jspdf;
-        // Get the generated policy text
-        let policyText = document.getElementById('policy-results').textContent;
-        // Create a new PDF document
+        let policyText = document.getElementById('policy-content').textContent;
         const doc = new jsPDF();
-        // Split the text into lines that fit within the page width
         const lines = doc.splitTextToSize(policyText, 180);
-        // Add the text to the PDF starting at coordinates (10, 10)
         doc.text(lines, 10, 10);
-        // Save and download the PDF file
         doc.save("Responsible_AI_Policy.pdf");
     }
 
-    // Resets the form to initial state (implementation as needed)
+    // Reset the form to the initial state
     function resetForm() {
-        // You can clear input values, reset selections, or even reload the page
-        document.querySelectorAll('input').forEach(input => input.checked = false);
-        document.getElementById('org-name').value = '';
-        document.getElementById('org-industry').value = '';
-        // Clear any uploaded files if needed
-        document.getElementById('policy-file').value = '';
-        // Also, clear the policy results
-        document.getElementById('policy-results').textContent = '';
+        // Clear all input selections and values
+        document.querySelectorAll('input').forEach(input => {
+            if (input.type === 'radio' || input.type === 'checkbox') {
+                input.checked = false;
+            } else {
+                input.value = '';
+            }
+        });
+        // Reset file uploads
+        if (document.getElementById('policy-file')) {
+            document.getElementById('policy-file').value = '';
+        }
+        // Clear the results section
+        document.getElementById('policy-content').textContent = '';
     }
 });
