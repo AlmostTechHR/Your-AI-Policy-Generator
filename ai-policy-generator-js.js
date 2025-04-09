@@ -361,22 +361,23 @@ document.getElementById('culture-upload').addEventListener('change', function(ev
         }
         
         // HR AI Usage (Extra 10 points)
-        const hrAI = document.querySelector('input[name="hr-ai"]:checked').value;
-        switch (hrAI) {
-            case 'integrated':
-                score += 10;
-                break;
-            case 'partial':
-                score += 5;
-                break;
-            case 'none':
-                score += 0;
-                break;
-            default:
-                score += 0;
-                break;
-        }
-        
+        // HR AI Usage (Extra 10 points)
+const hrAI = document.querySelector('input[name="hr-ai"]:checked').value;
+switch (hrAI) {
+    case 'both':
+        score += 10;
+        break;
+    case 'hiring':
+    case 'performance':
+        score += 5;
+        break;
+    case 'no':
+        score += 0;
+        break;
+    default:
+        score += 0;
+        break;
+}
         return score;
     }
 
