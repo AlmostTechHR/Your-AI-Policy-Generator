@@ -1,0 +1,125 @@
+/* Main Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container {
+    max-width: 1000px;
+}
+
+/* Form Step Styling */
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+}
+
+/* Progress Bar */
+.progress {
+    height: 10px;
+    border-radius: 5px;
+}
+
+.progress-bar {
+    background-color: #5d67e9;
+    transition: width 0.3s ease;
+}
+
+/* Card Styling */
+.card {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+
+/* Button Styling */
+.btn-primary {
+    background-color: #5d67e9;
+    border-color: #5d67e9;
+}
+
+.btn-primary:hover {
+    background-color: #4a51c5;
+    border-color: #4a51c5;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+/* Results Page Styling */
+.score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    border: 10px solid #5d67e9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 36px;
+    font-weight: bold;
+    color: #5d67e9;
+}
+
+.score-circle span {
+    font-size: 24px;
+    margin-top: 5px;
+}
+
+#score-message {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.policy-preview {
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+#recommendations-list li {
+    margin-bottom: 10px;
+}
+
+/* Form Control Styling */
+.form-control:focus, .form-select:focus {
+    border-color: #5d67e9;
+    box-shadow: 0 0 0 0.25rem rgba(93, 103, 233, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: #5d67e9;
+    border-color: #5d67e9;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .score-circle {
+        width: 120px;
+        height: 120px;
+        font-size: 28px;
+    }
+    
+    .score-circle span {
+        font-size: 18px;
+    }
+    
+    #score-message {
+        font-size: 16px;
+    }
+}

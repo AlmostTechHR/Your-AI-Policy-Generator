@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethical AI Policy Builder</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <header class="text-center mb-5">
+            <h1>Ethical AI Policy Builder</h1>
+            <p class="lead">Create a comprehensive AI policy based on your organization's culture and values</p>
+        </header>
+
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <!-- Progress Bar -->
+                <div class="progress mb-4">
+                    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                </div>
+
+                <!-- Main Form Container -->
+                <div id="form-container" class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <!-- Step 1: Organization Info -->
+                        <div id="step-1" class="form-step active">
+                            <h3>Organization Information</h3>
+                            <div class="mb-3">
+                                <label for="org-name" class="form-label">Organization Name</label>
+                                <input type="text" class="form-control" id="org-name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="org-industry" class="form-label">Industry</label>
+                                <select class="form-select" id="org-industry" required>
+                                    <option value="" selected disabled>Select your industry</option>
+                                    <option value="healthcare">Healthcare</option>
+                                    <option value="finance">Finance</option>
+                                    <option value="education">Education</option>
+                                    <option value="technology">Technology</option>
+                                    <option value="retail">Retail</option>
+                                    <option value="manufacturing">Manufacturing</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="culture-upload" class="form-label">Upload Organization Culture Document (optional)</label>
+                                <input class="form-control" type="file" id="culture-upload" accept=".pdf,.doc,.docx,.txt">
+                                <div class="form-text">Upload your company values, culture document, or code of conduct to inform your AI policy.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="existing-policy" class="form-label">Do you have an existing AI policy?</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="existing-policy" id="policy-yes" value="yes">
+                                    <label class="form-check-label" for="policy-yes">Yes</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="existing-policy" id="policy-no" value="no">
+                                    <label class="form-check-label" for="policy-no">No</label>
+                                </div>
+                            </div>
+                            <div id="policy-upload" class="mb-3 d-none">
+                                <label for="policy-file" class="form-label">Upload your existing policy</label>
+                                <input class="form-control" type="file" id="policy-file" accept=".pdf,.doc,.docx,.txt">
+                            </div>
+                            <div class="text-end">
+                                <button id="step-1-next" class="btn btn-primary">Next</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: AI Stance Assessment -->
+                        <div id="step-2" class="form-step">
+                            <h3>AI Stance & Usage</h3>
+                            <div class="mb-3">
+                                <label for="ai-stance" class="form-label">What is your organization's stance on AI use?</label>
+                                <select class="form-select" id="ai-stance" required>
+                                    <option value="" selected disabled>Select your stance</option>
+                                    <option value="progressive">Progressive - We actively encourage AI adoption</option>
+                                    <option value="moderate">Moderate - We support AI with proper guidelines</option>
+                                    <option value="cautious">Cautious - We limit AI to specific approved use cases</option>
+                                    <option value="restrictive">Restrictive - We severely limit AI usage</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Which AI tools are approved for use in your organization?</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="ai-tool-1" name="ai-tools" value="chatgpt">
+                                    <label class="form-check-label" for="ai-tool-1">ChatGPT</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="ai-tool-2" name="ai-tools" value="claude">
+                                    <label class="form-check-label" for="ai-tool-2">Claude</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="ai-tool-3" name="ai-tools" value="bard">
+                                    <label class="form-check-label" for="ai-tool-3">Google Gemini</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="ai-tool-4" name="ai-tools" value="internal">
+                                    <label class="form-check-label" for="ai-tool-4">Internal AI tools</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="ai-tool-5" name="ai-tools" value="other">
+                                    <label class="form-check-label" for="ai-tool-5">Other</label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Do you allow employees to share company information with AI tools?</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="share-info" id="share-yes" value="yes">
+                                    <label class="form-check-label" for="share-yes">Yes, with no restrictions</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="share-info" id="share-limited" value="limited">
+                                    <label class="form-check-label" for="share-limited">Yes, with limitations</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="share-info" id="share-no" value="no">
+                                    <label class="form-check-label" for="share-no">No</label>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button id="step-2-prev" class="btn btn-secondary me-2">Previous</button>
+                                <button id="step-2-next" class="btn btn-primary">Next</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Data & Knowledge Sharing -->
+                        <div id="step-3" class="form-step">
+                            <h3>Data & Knowledge Management</h3>
+                            <div class="mb-3">
+                                <label class="form-label">Do you have a system for managing AI-generated knowledge?</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="knowledge-system" id="knowledge-yes" value="yes">
+                                    <label class="form-check-label" for="knowledge-yes">Yes, we have a formal system</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="knowledge-system" id="knowledge-informal" value="informal">
+                                    <label class="form-check-label" for="knowledge-informal">We have informal practices</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="knowledge-system" id="knowledge-no" value="no">
+                                    <label class="form-check-label" for="knowledge-no">No system in place</label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">How is sensitive data handled with AI tools?</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sensitive-data" id="sensitive-prohibited" value="prohibited">
+                                    <label class="form-check-label" for="sensitive-prohibited">Prohibited from AI tools</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sensitive-data" id="sensitive-approved" value="approved">
+                                    <label class="form-check-label" for="sensitive-approved">Only with approved secure AI tools</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sensitive-data" id="sensitive-case" value="case">
+                                    <label class="form-check-label" for="sensitive-case">Case by case approval</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sensitive-data" id="sensitive-no-policy" value="no-policy">
+                                    <label class="form-check-label" for="sensitive-no-policy">No specific policy</label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Do you track the impact of AI on inclusion and fairness?</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="inclusion-tracking" id="inclusion-yes" value="yes">
+                                    <label class="form-check-label" for="inclusion-yes">Yes, we have formal metrics</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="inclusion-tracking" id="inclusion-informal" value="informal">
+                                    <label class="form-check-label" for="inclusion-informal">We monitor informally</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="inclusion-tracking" id="inclusion-no" value="no">
+                                    <label class="form-check-label" for="inclusion-no">No tracking in place</label>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button id="step-3-prev" class="btn btn-secondary me-2">Previous</button>
+                                <button id="step-3-next" class="btn btn-primary">Next</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Training & Compliance -->
+                        <div id="step-4" class="form-step">
+                            <h3>Training & Compliance</h3>
+                            <div class="mb-3">
+                                <label class="form-label">Do you provide AI literacy training for employees?</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="ai-training" id="training-comprehensive" value="comprehensive">
+                                    <label class="form-check-label" for="training-comprehensive">Yes, comprehensive training</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="ai-training" id="training-basic" value="basic">
+                                    <label class="form-check-label" for="training-basic">Yes, basic training</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="ai-training" id="training-none" value="none">
+                                    <label class="form-check-label" for="training-none">No training provided</label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">How do you monitor compliance with AI policies?</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="compliance" id="compliance-automated" value="automated">
+                                    <label class="form-check-label" for="compliance-automated">Automated monitoring systems</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="compliance" id="compliance-manual" value="manual">
+                                    <label class="form-check-label" for="compliance-manual">Manual audits</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="compliance" id="compliance-self" value="self">
+                                    <label class="form-check-label" for="compliance-self">Self-reporting</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="compliance" id="compliance-none" value="none">
+                                    <label class="form-check-label" for="compliance-none">No monitoring in place</label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Do you use AI in hiring or performance decisions?</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="hr-ai" id="hr-both" value="both">
+                                    <label class="form-check-label" for="hr-both">Yes, for both hiring and performance</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="hr-ai" id="hr-hiring" value="hiring">
+                                    <label class="form-check-label" for="hr-hiring">Yes, for hiring only</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="hr-ai" id="hr-performance" value="performance">
+                                    <label class="form-check-label" for="hr-performance">Yes, for performance only</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="hr-ai" id="hr-no" value="no">
+                                    <label class="form-check-label" for="hr-no">No, we don't use AI for these purposes</label>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button id="step-4-prev" class="btn btn-secondary me-2">Previous</button>
+                                <button id="generate-policy" class="btn btn-success">Generate Policy & Assessment</button>
+                            </div>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div id="results" class="form-step">
+                            <h3>Your AI Readiness Score</h3>
+                            <div class="text-center mb-4">
+                                <div class="score-circle">
+                                    <span id="readiness-score">0</span><span>%</span>
+                                </div>
+                                <p id="score-message" class="mt-2">Your organization is at the beginning of its AI governance journey.</p>
+                            </div>
+
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h4>Key Recommendations</h4>
+                                </div>
+                                <div class="card-body">
+                                    <ul id="recommendations-list">
+                                        <!-- Recommendations will be added here -->
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h3>Your Generated AI Policy</h3>
+                            <div class="mb-3">
+                                <div class="card">
+                                    <div class="card-body policy-preview">
+                                        <div id="policy-content">
+                                            <!-- Policy content will be added here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-end">
+                                <button id="download-policy" class="btn btn-primary me-2">Download Policy</button>
+                                <button id="restart" class="btn btn-secondary">Start Over</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
