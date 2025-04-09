@@ -19,18 +19,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const policyYes = document.getElementById('policy-yes');
     const policyNo = document.getElementById('policy-no');
 
-    // Setup file upload visibility toggle
+    // Toggle file upload div based on existing policy selection
     policyYes.addEventListener('change', () => {
         policyUploadDiv.classList.remove('d-none');
     });
-
     policyNo.addEventListener('change', () => {
         policyUploadDiv.classList.add('d-none');
     });
 
     // Navigation Functions
     let currentStep = 0;
-
     function goToStep(step) {
         formSteps.forEach((formStep, index) => {
             formStep.classList.remove('active');
@@ -38,13 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 formStep.classList.add('active');
             }
         });
-        
         // Update progress bar
         const progress = (step / (formSteps.length - 1)) * 100;
         progressBar.style.width = `${progress}%`;
         progressBar.setAttribute('aria-valuenow', progress);
         progressBar.textContent = `${Math.round(progress)}%`;
-        
         currentStep = step;
     }
 
@@ -54,43 +50,35 @@ document.addEventListener('DOMContentLoaded', function() {
             goToStep(1);
         }
     });
-
     step2Prev.addEventListener('click', () => {
         goToStep(0);
     });
-
     step2Next.addEventListener('click', () => {
         if (validateStep2()) {
             goToStep(2);
         }
     });
-
     step3Prev.addEventListener('click', () => {
         goToStep(1);
     });
-
     step3Next.addEventListener('click', () => {
         if (validateStep3()) {
             goToStep(3);
         }
     });
-
     step4Prev.addEventListener('click', () => {
         goToStep(2);
     });
-
     generatePolicyBtn.addEventListener('click', () => {
         if (validateStep4()) {
             generateResults();
             goToStep(4);
         }
     });
-
     restartBtn.addEventListener('click', () => {
         resetForm();
         goToStep(0);
     });
-
     downloadPolicyBtn.addEventListener('click', () => {
         downloadPolicy();
     });
@@ -105,23 +93,19 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Please enter your organization name');
             return false;
         }
-        
         if (!orgIndustry) {
             alert('Please select your industry');
             return false;
         }
-        
         if (!existingPolicy) {
             alert('Please indicate whether you have an existing policy');
             return false;
         }
-        
         // If they have an existing policy, check if they've uploaded it
         if (existingPolicy.value === 'yes' && !document.getElementById('policy-file').files.length) {
             alert('Please upload your existing policy');
             return false;
         }
-        
         return true;
     }
 
@@ -134,17 +118,14 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Please select your organization\'s stance on AI use');
             return false;
         }
-        
         if (aiTools.length === 0) {
             alert('Please select at least one AI tool');
             return false;
         }
-        
         if (!shareInfo) {
             alert('Please indicate your policy on sharing company information with AI tools');
             return false;
         }
-        
         return true;
     }
 
@@ -157,17 +138,14 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Please indicate if you have a system for managing AI-generated knowledge');
             return false;
         }
-        
         if (!sensitiveData) {
             alert('Please indicate how sensitive data is handled with AI tools');
             return false;
         }
-        
         if (!inclusionTracking) {
             alert('Please indicate if you track the impact of AI on inclusion and fairness');
             return false;
         }
-        
         return true;
     }
 
@@ -180,25 +158,21 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Please indicate if you provide AI literacy training');
             return false;
         }
-        
         if (!compliance) {
             alert('Please indicate how you monitor compliance with AI policies');
             return false;
         }
-        
         if (!hrAI) {
             alert('Please indicate if you use AI in hiring or performance decisions');
             return false;
         }
-        
         return true;
     }
 
     // Policy Generation Functions
+
     function calculateReadinessScore() {
         let score = 0;
-        const maxScore = 100;
-        
         // AI Stance (0-15 points)
         const aiStance = document.getElementById('ai-stance').value;
         switch (aiStance) {
@@ -269,4 +243,84 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
             case 'manual':
                 score += 10;
-                break
+                break;
+            case 'none':
+                score += 0;
+                break;
+            default:
+                score += 0;
+                break;
+        }
+        
+        // HR AI Usage (Extra 10 points)
+        const hrAI = document.querySelector('input[name="hr-ai"]:checked').value;
+        switch (hrAI) {
+            case 'integrated':
+                score += 10;
+                break;
+            case 'partial':
+                score += 5;
+                break;
+            case 'none':
+                score += 0;
+                break;
+        }
+        
+        return score;
+    }
+
+    // This function generates the policy output text based on user inputs and calculated readiness score.
+    function generateResults() {
+        // Retrieve the organization name
+        const orgName = document.getElementById('org-name').value;
+        // Calculate the readiness score
+        let score = calculateReadinessScore();
+        // Construct the policy text based on score and input data
+        let policyText = "Responsible AI Policy for " + orgName + "\n\n";
+        policyText += "Your Ethical AI Readiness Score: " + score + " out of 100\n\n";
+        
+        if (score >= 75) {
+            policyText += "Great job! Your organization demonstrates an excellent foundation for ethical AI use. "
+                        + "Continue to enhance your policies with periodic reviews and advanced training programs.";
+        } else if (score >= 50) {
+            policyText += "Your organization shows a moderate level of readiness. There is room for improvement in policy "
+                        + "and training measures. Consider investing in comprehensive AI literacy training and automating compliance monitoring.";
+        } else {
+            policyText += "Your readiness score indicates a need for significant enhancements in your ethical AI policies. "
+                        + "We recommend a thorough review of your current practices and the implementation of robust governance measures.";
+        }
+        
+        // Optionally include further personalized recommendations based on other form data
+        
+        // Place the generated policy text in the results container
+        document.getElementById('policy-results').textContent = policyText;
+    }
+
+    // This function uses jsPDF to allow users to download the generated policy as a PDF.
+    function downloadPolicy() {
+        // Check that jsPDF is available
+        const { jsPDF } = window.jspdf;
+        // Get the generated policy text
+        let policyText = document.getElementById('policy-results').textContent;
+        // Create a new PDF document
+        const doc = new jsPDF();
+        // Split the text into lines that fit within the page width
+        const lines = doc.splitTextToSize(policyText, 180);
+        // Add the text to the PDF starting at coordinates (10, 10)
+        doc.text(lines, 10, 10);
+        // Save and download the PDF file
+        doc.save("Responsible_AI_Policy.pdf");
+    }
+
+    // Resets the form to initial state (implementation as needed)
+    function resetForm() {
+        // You can clear input values, reset selections, or even reload the page
+        document.querySelectorAll('input').forEach(input => input.checked = false);
+        document.getElementById('org-name').value = '';
+        document.getElementById('org-industry').value = '';
+        // Clear any uploaded files if needed
+        document.getElementById('policy-file').value = '';
+        // Also, clear the policy results
+        document.getElementById('policy-results').textContent = '';
+    }
+});
