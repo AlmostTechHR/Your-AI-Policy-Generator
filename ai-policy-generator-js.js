@@ -160,6 +160,23 @@ function analyzeText(text) {
         downloadPolicy();
     });
 
+    // Add event listener for culture document upload
+document.getElementById('culture-upload').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  if (file) {
+    // Process the file when it's uploaded
+    processUploadedDocument(file)
+      .then(analysis => {
+        // Store the analysis for later use
+        window.documentAnalysis = analysis;
+        console.log("Document analysis complete:", analysis);
+      })
+      .catch(error => {
+        console.error("Error processing document:", error);
+      });
+  }
+});
+    
     // Form Validation Functions
     function validateStep1() {
         const orgName = document.getElementById('org-name').value;
@@ -363,29 +380,167 @@ function analyzeText(text) {
         return score;
     }
 
-    // Generate the policy output text and update results section
-    function generateResults() {
-        // Retrieve user inputs
-        const orgName = document.getElementById('org-name').value;
-        let score = calculateReadinessScore();
-        let policyText = "Responsible AI Policy for " + orgName + "\n\n";
-        policyText += "Your Ethical AI Readiness Score: " + score + " out of 100\n\n";
-        
-        if (score >= 75) {
-            policyText += "Great job! Your organization demonstrates an excellent foundation for ethical AI use. "
-                        + "Continue to enhance your policies with periodic reviews and advanced training programs.";
-        } else if (score >= 50) {
-            policyText += "Your organization shows a moderate level of readiness. There is room for improvement in policy "
-                        + "and training measures. Consider investing in comprehensive AI literacy training and automating compliance monitoring.";
-        } else {
-            policyText += "Your readiness score indicates a need for significant enhancements in your ethical AI policies. "
-                        + "We recommend a thorough review of your current practices and the implementation of robust governance measures.";
-        }
-        
-        // Update the results section using the "policy-content" element
-        document.getElementById('policy-content').textContent = policyText;
-    }
+    // Replace your existing generateResults() function with this enhanced version
+function generateResults() {
+  // Get base score from form inputs
+  let score = calculateReadinessScore();
+  
+  // If document was analyzed, incorporate those insights
+  if (window.documentAnalysis) {
+    // Add bonus points for document analysis
+    const docAnalysis = window.documentAnalysis;
+    
+    // Adjust score based on document analysis (up to 15 extra points)
+    const documentBonus = Math.min(
+      15, 
+      Math.floor((docAnalysis.inclusionScore + docAnalysis.innovationScore + docAnalysis.complianceScore) / 3)
+    );
+    score += documentBonus;
+    
+    // Generate more personalized policy
+    generatePersonalizedPolicy(docAnalysis, score);
+  } else {
+    // Generate generic policy
+    generateGenericPolicy(score);
+  }
+  
+  // Update the score display
+  document.getElementById('readiness-score').textContent = score;
+  
+  // Update score message
+  updateScoreMessage(score);
+  
+  // Generate recommendations
+  generateRecommendations(score);
+}
 
+    function generatePersonalizedPolicy(analysis, score) {
+  const orgName = document.getElementById('org-name').value;
+  const policyContent = document.getElementById('policy-content');
+  
+  // Create policy sections
+  let policyHTML = `<h2>Responsible AI Policy for ${orgName}</h2>`;
+  
+  // Introduction
+  policyHTML += `<p>This Responsible AI Policy outlines how ${orgName} approaches the use of artificial intelligence in alignment with our organizational values and culture.</p>`;
+  
+  // Core principles section
+  policyHTML += `<h3>Core Principles</h3><ul>`;
+  
+  // Add principles based on document analysis
+  if (analysis.inclusionScore > 3) {
+    policyHTML += `<li><strong>Inclusive AI:</strong> We are committed to ensuring our AI systems are designed and deployed in ways that respect and promote diversity, equity, and inclusion.</li>`;
+  }
+  
+  if (analysis.innovationScore > 3) {
+    policyHTML += `<li><strong>Innovative Responsibility:</strong> We encourage innovation with AI while maintaining strict standards for responsible development and use.</li>`;
+  }
+  
+  if (analysis.complianceScore > 3) {
+    policyHTML += `<li><strong>Regulatory Compliance:</strong> We adhere to all applicable regulations and industry standards related to AI use.</li>`;
+  }
+  
+  // Add standard principles
+  policyHTML += `
+    <li><strong>Transparency:</strong> We maintain transparency about when and how AI is used in our products and services.</li>
+    <li><strong>Human-Centered:</strong> Our AI systems are designed to augment human capabilities, not replace human judgment.</li>
+    <li><strong>Privacy & Security:</strong> We protect data privacy and maintain robust security measures for all AI systems.</li>
+  </ul>`;
+  
+  // Add key phrases from document if available
+  if (analysis.keyPhrases.length > 0) {
+    policyHTML += `<h3>Alignment with Organizational Values</h3>`;
+    policyHTML += `<p>This policy incorporates key principles from our organizational culture documents:</p><ul>`;
+    
+    // Add up to 3 key phrases
+    for (let i = 0; i < Math.min(3, analysis.keyPhrases.length); i++) {
+      policyHTML += `<li>"${analysis.keyPhrases[i]}"</li>`;
+    }
+    
+    policyHTML += `</ul>`;
+  }
+  
+  // Add readiness score
+  policyHTML += `<h3>AI Readiness Assessment</h3>`;
+  policyHTML += `<p>Based on our assessment, ${orgName} has an AI Readiness Score of ${score}/100.</p>`;
+  
+  // Set the HTML content
+  policyContent.innerHTML = policyHTML;
+}
+
+function generateGenericPolicy(score) {
+  const orgName = document.getElementById('org-name').value;
+  const policyContent = document.getElementById('policy-content');
+  
+  let policyHTML = `<h2>Responsible AI Policy for ${orgName}</h2>`;
+  
+  policyHTML += `<p>This document outlines our approach to the responsible use of artificial intelligence technologies.</p>`;
+  
+  policyHTML += `<h3>Core Principles</h3><ul>
+    <li><strong>Ethical Use:</strong> We are committed to using AI in ways that align with our organizational values and ethical standards.</li>
+    <li><strong>Transparency:</strong> We will be transparent about when and how AI is used in our products and services.</li>
+    <li><strong>Human Oversight:</strong> All AI systems will have appropriate human oversight and review mechanisms.</li>
+    <li><strong>Privacy & Security:</strong> We will protect data privacy and maintain robust security measures for all AI systems.</li>
+    <li><strong>Fairness:</strong> We will work to identify and address potential biases in our AI systems.</li>
+  </ul>`;
+  
+  policyHTML += `<h3>AI Readiness Assessment</h3>`;
+  policyHTML += `<p>Based on our assessment, ${orgName} has an AI Readiness Score of ${score}/100.</p>`;
+  
+  policyContent.innerHTML = policyHTML;
+}
+
+function updateScoreMessage(score) {
+  const scoreMessage = document.getElementById('score-message');
+  
+  if (score >= 75) {
+    scoreMessage.textContent = "Your organization demonstrates an excellent foundation for ethical AI use.";
+  } else if (score >= 50) {
+    scoreMessage.textContent = "Your organization shows a moderate level of AI readiness with room for improvement.";
+  } else {
+    scoreMessage.textContent = "Your organization is at the beginning of its AI governance journey.";
+  }
+}
+
+function generateRecommendations(score) {
+  const recommendationsList = document.getElementById('recommendations-list');
+  recommendationsList.innerHTML = ''; // Clear existing recommendations
+  
+  const recommendations = [];
+  
+  // Add recommendations based on score
+  if (score < 50) {
+    recommendations.push("Develop a formal AI governance framework with clear policies and guidelines.");
+    recommendations.push("Implement basic AI literacy training for all employees who use AI tools.");
+    recommendations.push("Establish a process for reviewing and approving AI use cases.");
+  } else if (score < 75) {
+    recommendations.push("Enhance your AI literacy training program to cover advanced topics.");
+    recommendations.push("Implement more structured compliance monitoring for AI usage.");
+    recommendations.push("Develop metrics to assess AI's impact on inclusion and fairness.");
+  } else {
+    recommendations.push("Continue to refine your AI governance with regular policy reviews.");
+    recommendations.push("Share your best practices with your industry peers.");
+    recommendations.push("Consider establishing an AI ethics committee to guide ongoing development.");
+  }
+  
+  // Get specific form values for targeted recommendations
+  const aiTraining = document.querySelector('input[name="ai-training"]:checked')?.value;
+  if (aiTraining === 'none') {
+    recommendations.push("Implement a basic AI literacy training program for all employees.");
+  }
+  
+  const knowledgeSystem = document.querySelector('input[name="knowledge-system"]:checked')?.value;
+  if (knowledgeSystem === 'no') {
+    recommendations.push("Create a system for documenting and sharing AI-generated insights.");
+  }
+  
+  // Add recommendations to the list
+  recommendations.forEach(recommendation => {
+    const li = document.createElement('li');
+    li.textContent = recommendation;
+    recommendationsList.appendChild(li);
+  });
+}
     // Use jsPDF to generate and download the policy as a PDF file.
     function downloadPolicy() {
         const { jsPDF } = window.jspdf;
