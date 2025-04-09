@@ -4,6 +4,83 @@ document.addEventListener('DOMContentLoaded', function() {
     const formSteps = document.querySelectorAll('.form-step');
     const policyUploadDiv = document.getElementById('policy-upload');
 
+    // Document processing functions 
+function processUploadedDocument(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onload = function(event) {
+      const text = event.target.result;
+      // Simple keyword analysis
+      const keywords = analyzeText(text);
+      resolve(keywords);
+    };
+    
+    reader.onerror = function() {
+      reject(new Error("Error reading file"));
+    };
+    
+    // Read as text - works for .txt files
+    reader.readAsText(file);
+  });
+}
+
+function analyzeText(text) {
+  // Create a simple analysis object with keyword counts
+  const analysis = {
+    inclusionScore: 0,
+    innovationScore: 0,
+    complianceScore: 0,
+    keyPhrases: []
+  };
+  
+  // Check for inclusion-related words
+  const inclusionWords = ['diversity', 'inclusion', 'equity', 'belonging', 'accessibility'];
+  inclusionWords.forEach(word => {
+    const regex = new RegExp(`\\b${word}\\b`, 'gi');
+    const matches = text.match(regex);
+    if (matches) {
+      analysis.inclusionScore += matches.length;
+    }
+  });
+  
+  // Check for innovation-related words
+  const innovationWords = ['innovation', 'creative', 'transform', 'agile', 'experiment'];
+  innovationWords.forEach(word => {
+    const regex = new RegExp(`\\b${word}\\b`, 'gi');
+    const matches = text.match(regex);
+    if (matches) {
+      analysis.innovationScore += matches.length;
+    }
+  });
+  
+  // Check for compliance-related words
+  const complianceWords = ['compliance', 'policy', 'regulation', 'guideline', 'standard'];
+  complianceWords.forEach(word => {
+    const regex = new RegExp(`\\b${word}\\b`, 'gi');
+    const matches = text.match(regex);
+    if (matches) {
+      analysis.complianceScore += matches.length;
+    }
+  });
+  
+  // Extract key phrases (simple implementation)
+  const sentences = text.split(/[.!?]+/);
+  sentences.forEach(sentence => {
+    const trimmedSentence = sentence.trim();
+    if (trimmedSentence.length > 10 && 
+        (inclusionWords.some(word => trimmedSentence.toLowerCase().includes(word)) ||
+         innovationWords.some(word => trimmedSentence.toLowerCase().includes(word)) ||
+         complianceWords.some(word => trimmedSentence.toLowerCase().includes(word)))) {
+      if (trimmedSentence.length < 150) {
+        analysis.keyPhrases.push(trimmedSentence);
+      }
+    }
+  });
+  
+  return analysis;
+}
+
     // Navigation Buttons
     const step1Next = document.getElementById('step-1-next');
     const step2Prev = document.getElementById('step-2-prev');
