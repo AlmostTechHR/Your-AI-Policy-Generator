@@ -28,9 +28,6 @@ Whether you're a small business taking your first steps with AI or an enterprise
 - [ ] Questions form
 - [ ] Score calculator
 - [ ] Policy generator (template-based)
-- [ ] Simple front-end (HTML/CSS)
-- [ ] Backend logic (Python Flask or Node.js)
-
 ---
 
 ## 🎯 Goal of This Project
