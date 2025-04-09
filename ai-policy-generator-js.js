@@ -541,16 +541,115 @@ function generateRecommendations(score) {
     recommendationsList.appendChild(li);
   });
 }
-    // Use jsPDF to generate and download the policy as a PDF file.
-    function downloadPolicy() {
-        const { jsPDF } = window.jspdf;
-        let policyText = document.getElementById('policy-content').textContent;
-        const doc = new jsPDF();
-        const lines = doc.splitTextToSize(policyText, 180);
-        doc.text(lines, 10, 10);
-        doc.save("Responsible_AI_Policy.pdf");
+   // Replace your current downloadPolicy function (around line 494) with this improved version
+function downloadPolicy() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Get the organization name and calculate score
+    const orgName = document.getElementById('org-name').value;
+    // Use the same score that's displayed on screen
+    const score = parseInt(document.getElementById('readiness-score').textContent);
+    
+    // Create a nicely formatted PDF with proper sections
+    let policyText = `Responsible AI Policy for ${orgName}\n\n`;
+    
+    // SECTION 1: AI READINESS ASSESSMENT
+    policyText += `SECTION 1: AI READINESS ASSESSMENT\n\n`;
+    policyText += `Your Ethical AI Readiness Score: ${score} out of 100\n\n`;
+    
+    // Add assessment description based on score
+    if (score >= 75) {
+        policyText += `Your organization demonstrates an excellent foundation for ethical AI use. Continue to enhance your policies with periodic reviews and advanced training programs.\n\n`;
+    } else if (score >= 50) {
+        policyText += `Your organization shows a moderate level of readiness. There is room for improvement in policy and training measures. Consider investing in comprehensive AI literacy training and automating compliance monitoring.\n\n`;
+    } else {
+        policyText += `Your readiness score indicates a need for significant enhancements in your ethical AI policies. We recommend a thorough review of your current practices and the implementation of robust governance measures.\n\n`;
     }
-
+    
+    // SECTION 2: PRACTICAL AI POLICY
+    policyText += `SECTION 2: RESPONSIBLE AI POLICY\n\n`;
+    policyText += `Purpose: This policy provides practical guidance for the use of AI tools and systems at ${orgName}. It is designed to encourage innovation while ensuring alignment with our organizational values.\n\n`;
+    
+    policyText += `CORE PRINCIPLES:\n\n`;
+    policyText += `1. Human-Centered: AI should augment human capabilities, not replace human judgment. Our team members remain at the center of all AI-enabled processes.\n\n`;
+    policyText += `2. Transparency: We maintain clarity about when and how AI is used. Team members should know when they are interacting with AI systems.\n\n`;
+    policyText += `3. Privacy & Security: We protect data privacy and maintain robust security measures when using AI tools.\n\n`;
+    policyText += `4. Fairness: We commit to building AI systems that are free from harmful bias and work to identify and address potential bias in third-party tools.\n\n`;
+    policyText += `5. Accountability: We take responsibility for the impacts of our AI systems and have clear processes for addressing issues that arise.\n\n`;
+    
+    // Add culture-specific elements if available
+    if (window.documentAnalysis) {
+        const analysis = window.documentAnalysis;
+        
+        if (analysis.inclusionScore > 3) {
+            policyText += `6. Inclusive Design: We ensure our AI systems respect and promote diversity, equity, and inclusion.\n\n`;
+        }
+        
+        if (analysis.innovationScore > 3) {
+            policyText += `7. Innovative Responsibility: We encourage creative uses of AI while maintaining ethical standards.\n\n`;
+        }
+        
+        if (analysis.complianceScore > 3) {
+            policyText += `8. Regulatory Compliance: We adhere to all applicable regulations related to AI use.\n\n`;
+        }
+        
+        // Add organizational values if available
+        if (analysis.keyPhrases.length > 0) {
+            policyText += `ALIGNMENT WITH ORGANIZATIONAL VALUES:\n\n`;
+            policyText += `These principles align with our core organizational values, including:\n`;
+            
+            // Add up to 3 key phrases
+            for (let i = 0; i < Math.min(3, analysis.keyPhrases.length); i++) {
+                policyText += `• "${analysis.keyPhrases[i]}"\n`;
+            }
+            policyText += `\n`;
+        }
+    }
+    
+    // SECTION 3: PRACTICAL GUIDANCE
+    policyText += `SECTION 3: PRACTICAL GUIDANCE\n\n`;
+    
+    // Add practical guidance based on their assessment
+    policyText += `For Employees:\n`;
+    policyText += `• Know which AI tools are approved for use in your role\n`;
+    policyText += `• Maintain awareness of sensitive data restrictions\n`;
+    policyText += `• Review AI-generated outputs before using them in important decisions\n`;
+    policyText += `• Report concerns about AI outputs that seem biased or problematic\n\n`;
+    
+    policyText += `For Leaders:\n`;
+    policyText += `• Encourage responsible AI innovation within your teams\n`;
+    policyText += `• Support team members in developing AI literacy\n`;
+    policyText += `• Ensure AI implementations align with organizational values\n`;
+    policyText += `• Regularly review how AI is being used in your area\n\n`;
+    
+    // SECTION 4: IMPROVEMENT ROADMAP
+    policyText += `SECTION 4: IMPROVEMENT ROADMAP\n\n`;
+    policyText += `Based on your assessment, we recommend the following actions:\n\n`;
+    
+    // Add custom recommendations based on score
+    if (score < 50) {
+        policyText += `• Develop a formal AI governance framework with clear guidelines\n`;
+        policyText += `• Implement basic AI literacy training for all employees\n`;
+        policyText += `• Establish a process for reviewing AI use cases\n`;
+        policyText += `• Create a feedback mechanism for AI-related concerns\n`;
+    } else if (score < 75) {
+        policyText += `• Enhance your existing AI literacy training program\n`;
+        policyText += `• Implement more structured compliance monitoring\n`;
+        policyText += `• Develop metrics to assess AI's impact on inclusion\n`;
+        policyText += `• Consider forming an AI ethics working group\n`;
+    } else {
+        policyText += `• Continue to refine your AI governance processes\n`;
+        policyText += `• Share your best practices with industry peers\n`;
+        policyText += `• Establish an AI ethics committee for ongoing guidance\n`;
+        policyText += `• Create advanced training for AI-intensive roles\n`;
+    }
+    
+    // Add to PDF with proper formatting
+    const lines = doc.splitTextToSize(policyText, 180);
+    doc.text(lines, 15, 15);
+    doc.save("Responsible_AI_Policy.pdf");
+}
     // Reset the form to the initial state
     function resetForm() {
         // Clear all input selections and values
