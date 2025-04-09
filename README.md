@@ -38,14 +38,6 @@ This is part of my **Vibe Coding journey**—learning tech from scratch as an HR
 
 ---
 
-## 💡 Inspiration
-Templates from:
-- UC Berkeley AI Policy
-- Microsoft Responsible AI guidelines
-- My experience building HR frameworks with Inclusion and Compliance in mind
-
----
-
 ## 🙋‍♀️ Built by
 **Sandhiya** – AlmostTEchHR Explorer  
 *Trying, testing, and tinkering with tech to make HR smarter, fairer, and future-ready.*
